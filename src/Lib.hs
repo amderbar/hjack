@@ -2,6 +2,7 @@ module Lib
     ( play
     ) where
 
+import           Control.Monad         (liftM2)
 import           Data.Char             (toLower)
 import           Data.List             (intercalate, sort)
 import           System.Random.Shuffle (shuffleM)
@@ -18,12 +19,12 @@ instance Show Card where
     show CardK = "K"
     show card  = show $ fromEnum card + 1
 
-cardValue :: Card -> Int -- [Int]
-cardValue CardA = 1 -- [1, 11]
-cardValue CardJ = 10 -- [10]
-cardValue CardQ = 10 -- [10]
-cardValue CardK = 10 -- [10]
-cardValue card  = fromEnum card + 1 -- [fromEnum card + 1]
+cardValue :: Card -> [Int]
+cardValue CardA = [1, 11]
+cardValue CardJ = [10]
+cardValue CardQ = [10]
+cardValue CardK = [10]
+cardValue card  = [fromEnum card + 1]
 
 type Hands = [Card]
 type Deck = [Card]
@@ -35,8 +36,9 @@ showHands :: Hands -> String
 showHands hands = intercalate ", " $ map show (sort hands)
 
 countHands :: Hands -> Int
-countHands = sum . map cardValue
--- countHands hands = foldl (<$>) (+) $ map cardValue hands
+countHands hands = snd $ maximum $ map (\c -> (powerHands c, c)) $
+        foldl (liftM2 (+)) [0] $ map cardValue hands
+
 
 powerHands :: Int -> Int
 powerHands handsCount
