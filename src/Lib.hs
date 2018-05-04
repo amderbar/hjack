@@ -138,8 +138,8 @@ gameResult resultField = do
     let field = either id id resultField
     let playerCount = countHands $ playerHands field
     let dealerCount = countHands $ dealerHands field
-    putStrLn $ ""
-    putStrLn $ "結果："
+    putStrLn ""
+    putStrLn "結果："
     putStrLn $ "あなたの手札：" ++ showHands (playerHands field)
     putStrLn $ "ポイント合計：" ++ show playerCount
     putStrLn ""
